@@ -1,15 +1,12 @@
 ---
-title: API Reference
+title: Rep4Rep API Reference
 
 language_tabs: # must be one of https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - <a href='https://github.com/rep4rep/rep4rep-bot/blob/main/api.js'>NodeJS Example API Wrapper</a>
+  - <a href='https://rep4rep.com'>rep4rep.com</a>
 
 includes:
   - errors
@@ -20,226 +17,238 @@ code_clipboard: true
 
 meta:
   - name: description
-    content: Documentation for the Kittn API
+    content: Documentation for the Rep4Rep API
 ---
-
-# Introduction
-
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
 
 # Authentication
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+> Example request:
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
+curl "https://rep4rep.com/pub-api/user" \
+  --get \
+  --data "apiToken=API_TOKEN_HERE"
 ```
 
-```javascript
-const kittn = require('kittn');
+> Make sure to replace `API_TOKEN_HERE` with your API key.
 
-let api = kittn.authorize('meowmeowmeow');
-```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+Rep4Rep uses API keys to allow access to its API. You can create & manage your api token over on the setttings page. [rep4rep settings](https://rep4rep.com/user/settings/).
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+Rep4Rep expects the API key to be included in all API requests as a **parameter** named `apiToken`, like so:
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`https://rep4rep.com/pub-api/user?apiToken=API_TOKEN_HERE`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>API_TOKEN_HERE</code> with your own Api Token.
 </aside>
 
-# Kittens
 
-## Get All Kittens
+# User
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Get User
 
 ```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
+curl "https://rep4rep.com/pub-api/user" \
+  --get \
+  --data "apiToken=API_TOKEN_HERE"
 ```
 
-```javascript
-const kittn = require('kittn');
+> Example successful response:
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+```json
+{
+  "uid": 1,
+  "username": "user",
+  "email": "user@rep4rep.com",
+  "points": 500,
+  "pendingPoints": 0,
+  "inGroup": true
+}
 ```
 
-> The above command returns JSON structured like this:
+This endpoint retrieves your own user information.
+
+### HTTP Request
+
+`GET https://rep4rep.com/pub-api/user`
+
+### Query Parameters
+
+Parameter | Required | Description
+--------- | ------- | -----------
+apiToken | yes | Your Api Token.
+
+# Steamprofiles
+
+## Get Steamprofiles
+
+```shell
+curl "https://rep4rep.com/pub-api/user/steamprofiles" \
+  --get \
+  --data "apiToken=API_TOKEN_HERE"
+```
+
+> Example successful response:
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "id": "60f819ddc9250",
+    "steamId": "76561190000000000",
+    "personaName": "user 1",
+    "profileUrl": "https://steamcommunity.com/id/user1/",
+    "avatar": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+    "communityVisibilityState": 3,
+    "profileState": 1,
+    "commentPermission": 1,
+    "canReceiveComment": true
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "id": "66acf813b9d2d",
+    "steamId": "76561190000000000",
+    "personaName": "user 2",
+    "profileUrl": "https://steamcommunity.com/id/user2/",
+    "avatar": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+    "communityVisibilityState": 3,
+    "profileState": 1,
+    "commentPermission": 1,
+    "canReceiveComment": true
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves your added steamprofiles and the internal rep4rep steamprofile ID for the steamprofile.
+
+**Important:**
+`id` is your internal rep4rep steam ID which is used for other requests.
+
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET https://rep4rep.com/pub-api/user/steamprofiles`
 
 ### Query Parameters
 
-Parameter | Default | Description
+Parameter | Required | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+apiToken | yes | Your Api Token.
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Add Steamprofile
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
+curl "https://rep4rep.com/pub-api/user/steamprofiles/add" \
+  -X POST \
+  -d "apiToken=API_TOKEN_HERE" \
+  -d "steamProfile=STEAM_PROFILE_ID"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> Example successful response:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "success": "Your steam profile was added!"
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint adds a steamprofile to your rep4rep account.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://rep4rep.com/pub-api/user/steamprofiles/add`
 
-### URL Parameters
+### Query Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Parameter | Required | Description
+--------- | ------- | -----------
+apiToken | yes | Your Api Token.
+steamProfile | yes | Steamprofile URL, SteamID64 or Custom ID.
 
-## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
+# Tasks
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Get Available Tasks
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
+curl "https://rep4rep.com/pub-api/tasks" \
+  --get \
+  --data "apiToken=API_TOKEN_HERE" \
+  --data "steamProfile=INTERNAL_REP4REP_PROFILE_ID"
 ```
 
-```javascript
-const kittn = require('kittn');
+> Example successful response:
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+```json
+[
+  {
+    "taskId": "6154d6727812c",
+    "targetSteamProfileId": "76561190000000000",
+    "targetSteamProfileName": "user 1",
+    "requiredCommentId": 4455,
+    "requiredCommentText": "hello"
+  },
+  {
+    "taskId": "660dfdbd1343c",
+    "targetSteamProfileId": "76561190000000000",
+    "targetSteamProfileName": "user 2",
+    "requiredCommentId": 5566,
+    "requiredCommentText": "okay"
+  },
+  ...
+]
 ```
 
-> The above command returns JSON structured like this:
+This endpoint returns the available tasks for a given steamprofile.
+
+
+### HTTP Request
+
+`GET https://rep4rep.com/pub-api/tasks`
+
+### Query Parameters
+
+Parameter | Required | Description
+--------- | ------- | -----------
+apiToken | yes | Your Api Token.
+steamProfile | yes | Internal Rep4Rep Steamprofile ID
+
+**To get your internal rep4rep steamprofile ID use [get-steamprofiles](#get-steamprofiles)**
+
+
+## Update Task as Completed
+
+```shell
+curl "https://rep4rep.com/pub-api/tasks/complete" \
+  -X POST \
+  -d "apiToken=API_TOKEN_HERE" \
+  -d "taskId=TASK_ID" \
+  -d "commentId=COMMENT_ID" \
+  -d "authorSteamProfileId=AUTHOR_INTERNAL_R4R_STEAM_ID"
+```
+
+> Example successful response:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+  "success": "Task marked as complete and will be verified shortly."
 }
 ```
 
-This endpoint deletes a specific kitten.
+This endpoint marks a task as completed and will be awaiting verification automatically after.
+
+You should call this after a comment has been posted successfully.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`POST https://rep4rep.com/pub-api/tasks/complete`
 
-### URL Parameters
+### Query Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Parameter | Required | Description
+--------- | ------- | -----------
+apiToken | yes | Your Api Token.
+taskId | yes | Task ID.
+commentId | yes | Comment ID.
+authorSteamProfileId | yes | Your internal Rep4Rep Steamprofile ID that the comment was posted from.
 
+**To get your internal rep4rep steamprofile ID use [get-steamprofiles](#get-steamprofiles)**
